@@ -32,7 +32,7 @@ def no_conv(input, params, filters=None, dropout_keep_prob=1.0, trainable=True, 
     v_shape = vertices.get_shape()
     if params is None:
         # create new weights
-        Wvc = tf.Variable(initializer("he", (v_shape[1].value, filters)), name="Wvc", trainable=trainable)  # (v_dims, filters)
+        Wvc = tf.Variable(initializer("he", (v_shape[1].value, filters)), name="Wvc", trainable=trainable)  # (v_dims=70, filters=256)
         bv = tf.Variable(initializer("zero", (filters,)), name="bv", trainable=trainable)
     else:
         # use shared weights
@@ -42,7 +42,7 @@ def no_conv(input, params, filters=None, dropout_keep_prob=1.0, trainable=True, 
     params = {"Wvc": Wvc, "bv": bv}
 
     # generate vertex signals
-    Zc = tf.matmul(vertices, Wvc, name="Zc")  # (n_verts, filters)
+    Zc = tf.matmul(vertices, Wvc, name="Zc")  # 第一个线性变换(n_verts, filters)
     nonlin = nonlinearity("relu")
     sig = Zc + bv
     z = tf.reshape(nonlin(sig), tf.constant([-1, filters]))
@@ -56,7 +56,7 @@ def node_edge_average(input, params, filters=None, dropout_keep_prob=1.0, traina
     nh_indices = tf.squeeze(nh_indices, axis=2)
     v_shape = vertices.get_shape()
     e_shape = edges.get_shape()
-    nh_sizes = tf.expand_dims(tf.count_nonzero(nh_indices + 1, axis=1, dtype=tf.float32), -1)  # for fixed number of neighbors, -1 is a pad value
+    nh_sizes = tf.expand_dims(tf.math.count_nonzero(nh_indices + 1, axis=1, dtype=tf.float32), -1)  # for fixed number of neighbors, -1 is a pad value
     if params is None:
         # create new weights
         Wvc = tf.Variable(initializer("he", (v_shape[1].value, filters)), name="Wvc", trainable=trainable)  # (v_dims, filters)
@@ -72,7 +72,7 @@ def node_edge_average(input, params, filters=None, dropout_keep_prob=1.0, traina
     params = {"Wvn": Wvn, "We": We, "Wvc": Wvc, "bv": bv}
 
     # generate vertex signals
-    Zc = tf.matmul(vertices, Wvc, name="Zc")  # (n_verts, filters)
+    Zc = tf.matmul(vertices, Wvc, name="Zc")  # (n_verts, filters=256)
     # create neighbor signals
     e_We = tf.tensordot(edges, We, axes=[[2], [0]], name="e_We")  # (n_verts, n_nbors, filters)
     v_Wvn = tf.matmul(vertices, Wvn, name="v_Wvn")  # (n_verts, filters)
@@ -108,8 +108,8 @@ def merge(input, _, **kwargs):
     input1, input2, examples = input
     out1 = tf.gather(input1, examples[:, 0])
     out2 = tf.gather(input2, examples[:, 1])
-    output1 = tf.concat([out1, out2], axis=0)
-    output2 = tf.concat([out2, out1], axis=0)
+    output1 = tf.concat([out1, out2], axis=0)# (l_i ,r_i)
+    output2 = tf.concat([out2, out1], axis=0)# (r_i ,l_i)
     return tf.concat((output1, output2), axis=1), None
 
 
@@ -282,7 +282,7 @@ def initializer(init, shape):
     elif init == "he":
         fan_in = np.prod(shape[0:-1])
         std = 1/np.sqrt(fan_in)
-        return tf.random_uniform(shape, minval=-std, maxval=std)
+        return tf.random.uniform(shape, minval=-std, maxval=std)
 
 
 def nonlinearity(nl):

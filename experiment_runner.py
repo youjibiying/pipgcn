@@ -2,7 +2,8 @@ import os
 import sys
 import yaml
 import traceback
-import cPickle
+import _pickle as cPickle
+import pickle
 import tensorflow as tf
 import numpy as np
 from configuration import data_directory, experiment_directory, output_directory, seeds, printt
@@ -10,11 +11,24 @@ from train_test import TrainTest
 from pw_classifier import PWClassifier
 from results_processor import ResultsProcessor
 
+
+
+class StrToBytes:
+    def __init__(self, fileobj):
+        self.fileobj = fileobj
+    def read(self, size):
+        return self.fileobj.read(size).encode()
+    def readline(self, size=-1):
+        return self.fileobj.readline(size).encode()
+def load_cpkl(file):
+    with open(file, 'rb') as f:
+        target = pickle.load(f, encoding='latin1')
+    return target
 # Load experiment specified in system args
 exp_file = sys.argv[1]
 printt("Running Experiment File: {}".format(exp_file))
 f_name = exp_file.split(".")[0] if "." in exp_file else exp_file
-exp_specs = yaml.load(open(os.path.join(experiment_directory, exp_file), 'r').read())
+exp_specs = yaml.load(open(os.path.join(experiment_directory, exp_file), 'r').read(),Loader=yaml.FullLoader)
 
 # setup output directory
 outdir = os.path.join(output_directory, f_name)
@@ -42,11 +56,12 @@ for name, experiment in exp_specs["experiments"]:
         # Reuse train data if possible.
         if train_data_file != prev_train_data_file:
             printt("Loading train data")
-            train_list, train_data = cPickle.load(open(train_data_file))
+            train_list, train_data = load_cpkl(train_data_file) #175
             prev_train_data_file = train_data_file
         if test_data_file != prev_test_data_file:
             printt("Loading test data")
-            test_list, test_data = cPickle.load(open(test_data_file))
+            test_list, test_data = load_cpkl(test_data_file)#cPickle.load(open(test_data_file))
+            # 55 test
             prev_test_data_file = test_data_file
         # create data dictionary
         data = {"train": train_data, "test": test_data}
@@ -54,7 +69,7 @@ for name, experiment in exp_specs["experiments"]:
         for i, seed_pair in enumerate(seeds):
             printt("{}: rep{}".format(name, i))
             # set tensorflow and numpy seeds
-            tf.set_random_seed(seed_pair["tf_seed"])
+            tf.random.set_seed(seed_pair["tf_seed"])
             np.random.seed(int(seed_pair["np_seed"]))
             printt("Building model")
             # build model

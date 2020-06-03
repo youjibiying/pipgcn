@@ -23,28 +23,28 @@ experiments:
     - ["dense", {out_dims: 512}]
     - ["dense", {out_dims: 1, nonlin: False}]
     - ["average_predictions"]
-- - "3_layer"
-  - train_data_file: "train.cpkl"
-    test_data_file: "test.cpkl"
-    layer_args: {dropout_keep_prob: 0.5}
-    layers:
-    - ["node_edge_average", {filters: 256}]
-    - ["node_edge_average", {filters: 256}]
-    - ["node_edge_average", {filters: 512}]
-    - ["merge", {}, ["merge"]]
-    - ["dense", {out_dims: 512}]
-    - ["dense", {out_dims: 1, nonlin: False}]
-    - ["average_predictions"]
-- - "4_layer"
-  - train_data_file: "train.cpkl"
-    test_data_file: "test.cpkl"
-    layer_args: {dropout_keep_prob: 0.5}
-    layers:
-    - ["node_edge_average", {filters: 256}]
-    - ["node_edge_average", {filters: 256}]
-    - ["node_edge_average", {filters: 512}]
-    - ["node_edge_average", {filters: 512}]
-    - ["merge", {}, ["merge"]]
-    - ["dense", {out_dims: 512}]
-    - ["dense", {out_dims: 1, nonlin: False}]
-    - ["average_predictions"]
+#- - "3_layer"
+#  - train_data_file: "train.cpkl"
+#    test_data_file: "test.cpkl"
+#    layer_args: {dropout_keep_prob: 0.5}
+#    layers:
+#    - ["node_edge_average", {filters: 256}]
+#    - ["node_edge_average", {filters: 256}]
+#    - ["node_edge_average", {filters: 512}]
+#    - ["merge", {}, ["merge"]]
+#    - ["dense", {out_dims: 512}]
+#    - ["dense", {out_dims: 1, nonlin: False}]
+#    - ["average_predictions"]
+#- - "4_layer"
+#  - train_data_file: "train.cpkl"
+#    test_data_file: "test.cpkl"
+#    layer_args: {dropout_keep_prob: 0.5}
+#    layers:
+#    - ["node_edge_average", {filters: 256}]
+#    - ["node_edge_average", {filters: 256}]
+#    - ["node_edge_average", {filters: 512}]
+#    - ["node_edge_average", {filters: 512}]
+#    - ["merge", {}, ["merge"]]
+#    - ["dense", {out_dims: 512}]
+#    - ["dense", {out_dims: 1, nonlin: False}]
+#    - ["average_predictions"]

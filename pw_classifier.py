@@ -3,7 +3,8 @@ import copy
 
 import numpy as np
 import tensorflow as tf
-
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 import nn_components
 
 __all__ = [
@@ -44,7 +45,7 @@ class PWClassifier(object):
                 self.in_edge2 = tf.placeholder(tf.float32, [None, self.in_nhood_size, self.in_ne_dims], "edge2")
                 self.in_hood_indices1 = tf.placeholder(tf.int32, [None, self.in_nhood_size, 1], "hood_indices1")
                 self.in_hood_indices2 = tf.placeholder(tf.int32, [None, self.in_nhood_size, 1], "hood_indices2")
-                input1 = self.in_vertex1, self.in_edge1, self.in_hood_indices1
+                input1 = self.in_vertex1, self.in_edge1, self.in_hood_indices1 # 初始的节点特征[,70],[,20,2],[,20,1]
                 input2 = self.in_vertex2, self.in_edge2, self.in_hood_indices2
             self.examples = tf.placeholder(tf.int32, [None, 2], "examples")
             self.labels = tf.placeholder(tf.float32, [None], "labels")
@@ -69,7 +70,7 @@ class PWClassifier(object):
                     # make leg layers (everything up to the merge layer)
                     name = "leg1_{}_{}".format(type, i)
                     with tf.name_scope(name):
-                        output, params = layer_fn(input1, None, **args)
+                        output, params = layer_fn(input1, None, **args) # w*x+b \in [70,256]
                         if params is not None:
                             self.params.update({"{}_{}".format(name, k): v for k, v in params.items()})
                         if self.diffusion:
@@ -95,7 +96,7 @@ class PWClassifier(object):
 
             # Loss and optimizer
             with tf.name_scope("loss"):
-                scale_vector = (pn_ratio * (self.labels - 1) / -2) + ((self.labels + 1) / 2)
+                scale_vector = (pn_ratio * (self.labels - 1) / -2) + ((self.labels + 1) / 2) # label=-1,scale_vector=0.1;label=1,scale_vector=1
                 logits = tf.concat([-self.preds, self.preds], axis=1)
                 labels = tf.stack([(self.labels - 1) / -2, (self.labels + 1) / 2], axis=1)
                 self.loss = tf.losses.softmax_cross_entropy(labels, logits, weights=scale_vector)

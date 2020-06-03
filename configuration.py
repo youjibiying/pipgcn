@@ -12,10 +12,14 @@ except:
 ## Numpy print options
 np.set_printoptions(precision=3)
 
-## Directories 
-experiment_directory = os.environ["PL_EXPERIMENTS"]  # contains experiment yaml files
-data_directory = os.environ["PL_DATA"]  # contains cPickle data files 
-output_directory = os.environ["PL_OUT"]  # contains experiment results
+## Directories
+path="../data/PPIs"
+experiment_directory = './experiments'
+data_directory = path  # contains cPickle data files
+output_directory = path  # contains experiment results
+# experiment_directory = os.environ["PL_EXPERIMENTS"]  # contains experiment yaml files
+# data_directory = os.environ["PL_DATA"]  # contains cPickle data files
+# output_directory = os.environ["PL_OUT"]  # contains experiment results
 
 ## Random Seeds
 # each random seed represents an experimental replication.
