@@ -2,13 +2,6 @@
 <project version="4">
   <component name="PublishConfigData">
     <serverData>
-      <paths name="jiyingzhang@9.19.177.76:36000 password">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="jiyingzhang@9.19.177.76:36000 password (1)">
         <serverdata>
           <mappings>
@@ -16,14 +9,14 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="teg76">
+      <paths name="jiyingzhang@9.19.177.76:36000 password (2)">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="tingyangxu@9.19.177.115:36000 password (1)">
+      <paths name="teg76">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />

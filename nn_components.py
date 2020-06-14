@@ -268,7 +268,7 @@ def deep_tensor_conv(input, params, factors=None, dropout_keep_prob=1.0, trainab
 
 
 def average_predictions(input, _, **kwargs):
-    combined = tf.reduce_mean(tf.stack(tf.split(input, 2)), 0)
+    combined = tf.reduce_mean(tf.stack(tf.split(input, 2)), 0) #
     return combined, None
 
 

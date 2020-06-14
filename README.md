@@ -7,11 +7,11 @@ This work was supported by the National Science Foundation under grant no DBI-15
 ## Setup ##
 ### Requirements ###
 
-- python 2.7
+- python 3.6+(原先是2.7，现在改成了3.6+）
 - PyYAML 3.12
 - numpy 1.13.3
 - scikit-learn 0.19.1
-- tensorflow 1.0.1
+- tensorflow 2.0.1+(原来是1.0.1，现在改成2.0.+)
 
 ### Environment Variables ###
 The software assumes the following environment variables are set:
